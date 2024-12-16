@@ -33,14 +33,22 @@ internal static class WkHtmlToPdf
 
             return pdfFile;
         }
+#if DEBUG
         catch (Exception e)
         {
             if (!string.IsNullOrEmpty(error)) throw new Exception(error);
-#if DEBUG
+
             Console.WriteLine(e);
-#endif
+
             throw;
         }
+#else
+        catch
+        {
+            if (!string.IsNullOrEmpty(error)) throw new Exception(error);
+            throw;
+        }
+#endif
         finally
         {
             if (File.Exists(tempFileHtml)) File.Delete(tempFileHtml);
@@ -67,14 +75,21 @@ internal static class WkHtmlToPdf
 
             return pdfFile;
         }
+#if DEBUG
         catch (Exception e)
         {
             if (!string.IsNullOrEmpty(error)) throw new Exception(error);
-#if DEBUG
+
             Console.WriteLine(e);
-#endif
             throw;
         }
+#else
+        catch 
+        {
+            if (!string.IsNullOrEmpty(error)) throw new Exception(error);
+            throw;
+        }
+#endif
         finally
         {
             if (File.Exists(tempFilePdf)) File.Delete(tempFilePdf);

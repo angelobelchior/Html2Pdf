@@ -10,7 +10,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Html2Pdf.ConsoleApp", "play
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{FB64CBDF-FD19-48B2-80F0-C2D96C7C1924}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Html2Pdf.Tests", "tests\Html2Pdf.Tests\Html2Pdf.Tests.csproj", "{412A5263-2921-40F8-8EB1-61BE886B85A7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Html2Pdf.Tests", "tests\Html2Pdf.Tests.csproj", "{412A5263-2921-40F8-8EB1-61BE886B85A7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
