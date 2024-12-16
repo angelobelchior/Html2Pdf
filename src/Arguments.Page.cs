@@ -1,17 +1,14 @@
 namespace Html2Pdf.Lib;
 
-public partial class Html2PdfConverter
+public partial class Arguments
 {
     /// <summary>
     /// Set the starting page number (default 0)
     /// </summary>
     /// <param name="offset">Page offset</param>
     /// <returns></returns>
-    public Html2PdfConverter SetOffPageOffset(uint offset)
-    {
-        _arguments.Append($" --page-offset {offset}");
-        return this;
-    }
+    public Arguments SetOffPageOffset(uint offset)
+        => AppendArgument("--page-offset", offset);
 
     /// <summary>
     /// Sets the page margins
@@ -21,12 +18,12 @@ public partial class Html2PdfConverter
     /// <param name="bottom">Margin Bottom</param>
     /// <param name="left">Margins Left</param>
     /// <returns>HtmlToPDFBuilder instance</returns>
-    public Html2PdfConverter SetPageMargins(int top, int right, int bottom, int left)
+    public Arguments SetPageMargins(int top, int right, int bottom, int left)
     {
-        _arguments.Append($" --margin-bottom {bottom}");
-        _arguments.Append($" --margin-left {left}");
-        _arguments.Append($" --margin-right {right}");
-        _arguments.Append($" --margin-top {top}");
+        AppendArgument("--margin-bottom", bottom);
+        AppendArgument("--margin-left", left);
+        AppendArgument("--margin-right", right);
+        AppendArgument("--margin-top", top);
         return this;
     }
 
@@ -35,7 +32,7 @@ public partial class Html2PdfConverter
     /// </summary>
     /// <param name="all">Margin All</param>
     /// <returns>HtmlToPDFBuilder instance</returns>
-    public Html2PdfConverter SetPageMargins(int all)
+    public Arguments SetPageMargins(int all)
         => SetPageMargins(all, all, all, all);
 
     /// <summary>
@@ -44,7 +41,7 @@ public partial class Html2PdfConverter
     /// <param name="topAndBottom">Margin Top and Bottom</param>
     /// <param name="rightAndLeft">Margin Right and Left</param>
     /// <returns>HtmlToPDFBuilder instance</returns>
-    public Html2PdfConverter SetPageMargins(int topAndBottom, int rightAndLeft)
+    public Arguments SetPageMargins(int topAndBottom, int rightAndLeft)
         => SetPageMargins(topAndBottom, rightAndLeft, topAndBottom, rightAndLeft);
 
     /// <summary>
@@ -53,11 +50,8 @@ public partial class Html2PdfConverter
     /// <param name="pageWidth">Page Width in mm</param>
     /// <remarks>Has priority over <see cref="SetPageSize"/> but <see cref="SetPageHeight"/> has to be also specified.</remarks>
     /// <returns>HtmlToPDFBuilder instance</returns>
-    public Html2PdfConverter SetPageWidth(double pageWidth)
-    {
-        _arguments.Append($" --page-width {pageWidth}");
-        return this;
-    }
+    public Arguments SetPageWidth(double pageWidth)
+        => AppendArgument("--page-width", pageWidth);
 
     /// <summary>
     /// Sets the page Height
@@ -65,51 +59,36 @@ public partial class Html2PdfConverter
     /// <param name="pageHeight">Page Width in mm</param>
     /// <remarks>Has priority over <see cref="SetPageSize"/> but <see cref="SetPageWidth"/> has to be also specified.</remarks>
     /// <returns>HtmlToPDFBuilder instance</returns>
-    public Html2PdfConverter SetPageHeight(double pageHeight)
-    {
-        _arguments.Append($" --page-height {pageHeight}");
-        return this;
-    }
+    public Arguments SetPageHeight(double pageHeight)
+        => AppendArgument("--page-height", pageHeight);
 
     /// <summary>
     /// Set the page Orientation
     /// </summary>
     /// <param name="pageOrientation">Page Orientation</param>
     /// <returns>HtmlToPDFBuilder instance</returns>
-    public Html2PdfConverter SetPageOrientation(PageOrientation pageOrientation)
-    {
-        _arguments.Append($" -O {pageOrientation}");
-        return this;
-    }
+    public Arguments SetPageOrientation(PageOrientation pageOrientation)
+        => AppendArgument("--orientation", pageOrientation);
 
     /// <summary>
-    /// 
+    /// The default page size of the rendered document is A4.
     /// </summary>
-    /// <param name="pageSize"></param>
+    /// <param name="pageSize"><see cref="PageSize">Page Size</see></param>
     /// <returns>HtmlToPDFBuilder instance</returns>
-    public Html2PdfConverter SetPageSize(PageSize pageSize)
-    {
-        _arguments.Append($" -s {pageSize}");
-        return this;
-    }
+    public Arguments SetPageSize(PageSize pageSize)
+        => AppendArgument("--page-size", pageSize);
 
     /// <summary>
     /// Disable SmartSets the page size.
     /// </summary>
     /// <returns>HtmlToPDFBuilder instance</returns>
-    public Html2PdfConverter DisableSmartShrinking()
-    {
-        _arguments.Append(" --disable-smart-shrinking");
-        return this;
-    }
+    public Arguments DisableSmartShrinking()
+        => AppendArgument("--disable-smart-shrinking");
 
     /// <summary>
     /// Turn HTML form fields into pdf form fields
     /// </summary>
     /// <returns>HtmlToPDFBuilder instance</returns>
-    public Html2PdfConverter EnableForms()
-    {
-        _arguments.Append(" --enable-forms");
-        return this;
-    }
+    public Arguments EnableForms()
+        => AppendArgument("--enable-forms");
 }

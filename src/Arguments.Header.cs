@@ -1,12 +1,12 @@
 namespace Html2Pdf.Lib;
 
-public partial class Html2PdfConverter
+public partial class Arguments
 {
     /// <summary>
     /// Display line below the header
     /// </summary>
     /// <returns>HtmlToPDFBuilder instance</returns>
-    public Html2PdfConverter DisplayHeaderLine()
+    public Arguments DisplayHeaderLine()
         => AppendArgument("--header-line");
     
     /// <summary>
@@ -17,7 +17,7 @@ public partial class Html2PdfConverter
     /// <param name="fontName">Font Name</param>
     /// <param name="fontSize">Font Size</param>
     /// <returns>HtmlToPDFBuilder instance</returns>
-    public Html2PdfConverter SetHeaderText(
+    public Arguments SetHeaderText(
         string text, 
         TextAlignment textAlignment = TextAlignment.Left,
         string fontName = "Arial",
@@ -37,10 +37,10 @@ public partial class Html2PdfConverter
     }
     
     /// <summary>
-    /// Spacing between footer and content in mm (default 0)
+    /// Spacing between header and content in mm (default 0)
     /// </summary>
     /// <param name="headerSpacing">FooterSpacing </param>
     /// <returns>HtmlToPDFBuilder instance</returns>
-    public Html2PdfConverter SetHeaderSpacing(double headerSpacing)
+    public Arguments SetHeaderSpacing(double headerSpacing)
         => AppendArgument("--header-spacing", headerSpacing);
 }

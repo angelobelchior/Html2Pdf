@@ -131,7 +131,6 @@ internal static class WkHtmlToPdf
             if (c > 127) escaped.AppendFormat("&#{0};", c);
             else escaped.Append(c);
         }
-
         return escaped.ToString();
     }
 }

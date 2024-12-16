@@ -4,10 +4,8 @@
         
         <Nullable>enable</Nullable>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <NoWarn>1701;1702;NU5100</NoWarn>
+        <NoWarn>1701;1702;NU5100;NU5104</NoWarn>
         <LangVersion>latestmajor</LangVersion>
-
-        
     </PropertyGroup>
 
     <ItemGroup>
@@ -34,4 +32,9 @@
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="RazorEngineCore" Version="2024.4.1" />
+    </ItemGroup>
+
 </Project>
