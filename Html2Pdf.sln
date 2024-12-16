@@ -1,0 +1,39 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DBBD3988-81DC-4AFE-B0A9-75DB62FC7701}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "playground", "playground", "{35A3A8AF-E858-43F0-9484-B7C60C442DAD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Html2Pdf.Lib", "src\Html2Pdf.Lib.csproj", "{7E94AC4C-3843-487D-9187-A497B20E71EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Html2Pdf.ConsoleApp", "playground\ConsoleApp\Html2Pdf.ConsoleApp.csproj", "{27DA2810-DD95-4D70-8609-2B2E3E957D82}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{FB64CBDF-FD19-48B2-80F0-C2D96C7C1924}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Html2Pdf.Tests", "tests\Html2Pdf.Tests\Html2Pdf.Tests.csproj", "{412A5263-2921-40F8-8EB1-61BE886B85A7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7E94AC4C-3843-487D-9187-A497B20E71EC} = {DBBD3988-81DC-4AFE-B0A9-75DB62FC7701}
+		{27DA2810-DD95-4D70-8609-2B2E3E957D82} = {35A3A8AF-E858-43F0-9484-B7C60C442DAD}
+		{412A5263-2921-40F8-8EB1-61BE886B85A7} = {FB64CBDF-FD19-48B2-80F0-C2D96C7C1924}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7E94AC4C-3843-487D-9187-A497B20E71EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E94AC4C-3843-487D-9187-A497B20E71EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E94AC4C-3843-487D-9187-A497B20E71EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E94AC4C-3843-487D-9187-A497B20E71EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27DA2810-DD95-4D70-8609-2B2E3E957D82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27DA2810-DD95-4D70-8609-2B2E3E957D82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27DA2810-DD95-4D70-8609-2B2E3E957D82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27DA2810-DD95-4D70-8609-2B2E3E957D82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{412A5263-2921-40F8-8EB1-61BE886B85A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{412A5263-2921-40F8-8EB1-61BE886B85A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{412A5263-2921-40F8-8EB1-61BE886B85A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{412A5263-2921-40F8-8EB1-61BE886B85A7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
