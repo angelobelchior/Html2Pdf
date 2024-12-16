@@ -1,3 +1,5 @@
+![Html2Pdf Logo](https://github.com/angelobelchior/Html2Pdf/blob/main/Html2Pdf.Lib.png)
+
 # Html 2 Pdf
 
 [![.NET](https://github.com/angelobelchior/Html2Pdf/actions/workflows/dotnet.yml/badge.svg)](https://github.com/angelobelchior/Html2Pdf/actions/workflows/dotnet.yml)
@@ -106,7 +108,7 @@ var arguments = new Arguments()
     .SetFooterSpacing(23);
 ```
 
-### É possível gerar um PDF de três formas:
+### É possível gerar um PDF de quatro formas:
 
 #### A partir de um texto HTML
 
@@ -229,6 +231,16 @@ var razorTemplate =
 </html>
 """;
 
+var order = new Order("Roberto Rivellino", "Rua São Jorge, 777", "+55 11 912345678", [
+    new("Product 1", 9.99m),
+    new("Product 2", 19.99m),
+    new("Product 3", 29.99m)
+]);
+var byteArrayRazorTemplate = Converter.FromRazorTemplate(razorTemplate, order, arguments);
+```
+
+#### Em batch, a partir de um template HTML utilizando o Razor
+```csharp
 var order1 = new Order("Roberto Rivellino", "Rua São Jorge, 777", "+55 11 912345678", [
     new("Product 1", 9.99m),
     new("Product 2", 19.99m),
