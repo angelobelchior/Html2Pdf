@@ -1,4 +1,4 @@
-![Html2Pdf Logo](https://github.com/angelobelchior/Html2Pdf/blob/main/src/Html2Pdf.Lib.png)
+![Html2Pdf Logo](https://raw.githubusercontent.com/angelobelchior/Html2Pdf/refs/heads/main/src/Html2Pdf.Lib.png)
 
 # Html 2 Pdf
 
@@ -18,7 +18,9 @@ Porém, é preciso destacar que o [wkhtmltopdf](https://github.com/wkhtmltopdf/w
 
 ## Como Instalar
 
-WIP
+```
+dotnet add package Html2Pdf.Lib --version 0.0.1
+```
 
 ## Como Usar
 
