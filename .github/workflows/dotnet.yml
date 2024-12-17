@@ -32,16 +32,4 @@ jobs:
       run: dotnet pack ./src/Html2Pdf.Lib.csproj -c Release --no-build --output ./artifacts
 
     - name: Publish to NuGet
-      run: dotnet nuget push ./artifacts/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}      
-
-#  publish:
-#    environment: PROD
-#    needs: build
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      - name: Pack project
-#        run: dotnet pack ./src/Html2Pdf.Lib.csproj -c Release --no-build --output ./artifacts
-#
-#      - name: Publish to NuGet
-#        run: dotnet nuget push ./artifacts/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
+      run: dotnet nuget push ./artifacts/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
