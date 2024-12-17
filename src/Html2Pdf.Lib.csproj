@@ -29,6 +29,8 @@
     </ItemGroup>
 
     <ItemGroup>
+        <None Include="icon.png" Pack="true" PackagePath="\"/>
+
         <None Include="..\README.md" Pack="true" PackagePath="\"/>
         
         <Content Include="wkhtmltopdf\Linux\libwkhtmltox.so" Pack="true" PackagePath="contentFiles/any/any/wkhtmltopdf/Linux" PackageCopyToOutput="true">
@@ -49,6 +51,9 @@
         <Content Include="wkhtmltopdf\Windows\wkhtmltox.dll" Pack="true" PackagePath="contentFiles/any/any/wkhtmltopdf/Windows" PackageCopyToOutput="true">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
+        <None Update="icon.png">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
     <ItemGroup>
