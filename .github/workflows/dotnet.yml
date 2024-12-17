@@ -8,10 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: [ubuntu-latest]
 
     steps:
     - uses: actions/checkout@v4
@@ -34,4 +31,4 @@ jobs:
       run: dotnet pack ./src/Html2Pdf.Lib.csproj -c Release --no-build --output ./artifacts
 
     - name: Publish to NuGet
-      run: dotnet nuget push *.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json   
+      run: dotnet nuget push ./artifacts/*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s --skip-duplicate
