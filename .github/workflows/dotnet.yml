@@ -34,9 +34,4 @@ jobs:
       run: dotnet pack ./src/Html2Pdf.Lib.csproj -c Release --no-build --output ./artifacts
 
     - name: Publish to NuGet
-      env:
-        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-      run: |
-        dotnet nuget push "artifacts/*.nupkg" \
-          --api-key "$NUGET_API_KEY" \
-          --source "https://api.nuget.org/v3/index.json"
+      run: dotnet nuget push *.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json   
