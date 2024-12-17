@@ -7,7 +7,7 @@
         <NoWarn>1701;1702;NU5100;NU5104</NoWarn>
         <LangVersion>latestmajor</LangVersion>
 
-        <Version>0.0.3</Version>
+        <Version>0.0.4</Version>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
     </PropertyGroup>
