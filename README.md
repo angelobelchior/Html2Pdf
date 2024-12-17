@@ -4,32 +4,32 @@
 
 [![.NET](https://github.com/angelobelchior/Html2Pdf/actions/workflows/dotnet.yml/badge.svg)](https://github.com/angelobelchior/Html2Pdf/actions/workflows/dotnet.yml)
 
-## Solução para converter HTML em PDF
+## The best tool to convert HTML to PDF in .NET
 
-Html2Pdf.Lib é uma biblioteca Open Source e com [licença MIT](https://pt.wikipedia.org/wiki/Licen%C3%A7a_MIT) que converte um arquivo HTML em um arquivo PDF.
+Html2Pdf.Lib is an Open Source library with an [MIT license](https://en.wikipedia.org/wiki/MIT_License) that converts an HTML file into a PDF file.
 
-Essa biblioteca foi feita utilizando o [wkhtmltopdf](https://wkhtmltopdf.org/), que é uma ferramenta de linha de comando para converter arquivos HTML em PDFs usando o Mecanismo de renderização [QT Webkit](https://wiki.qt.io/Qt_WebKit).
+This library was built using [wkhtmltopdf](https://wkhtmltopdf.org/), which is a command-line tool for converting HTML files to PDFs using the [QT Webkit](https://wiki.qt.io/Qt_WebKit) rendering engine.
 
-Não tem segredo: O código em csharp apenas chama o executável do wkhtmltopdf e passa os parâmetros necessários. Simples assim: ```wkhtmltopdf -q --margin-bottom 10 --margin-left 10 --margin-right 10 --margin-top 10 -s A4```
+No secret: The C# code simply calls the wkhtmltopdf executable and passes the necessary parameters. It's that simple: ```wkhtmltopdf -q --margin-bottom 10 --margin-left 10 --margin-right 10 --margin-top 10 -s A4```
 
-Existem muitos outros parâmetros para configurar a conversão, como tamanho da página, margens, orientação, qualidade das imagens, etc. 
+There are many other parameters to configure the conversion, such as page size, margins, orientation, image quality, etc.
 
-Porém, é preciso destacar que o [wkhtmltopdf](https://github.com/wkhtmltopdf/wkhtmltopdf) foi descontinuado em 2020, tendo o seu [repositório](https://github.com/wkhtmltopdf/wkhtmltopdf) arquivado em 2023 e não tem mais suporte. Mas ainda é uma ferramenta muito utilizada e que funciona muito bem.
+However, it is important to note that [wkhtmltopdf](https://github.com/wkhtmltopdf/wkhtmltopdf) was discontinued in 2020, with its [repository](https://github.com/wkhtmltopdf/wkhtmltopdf) archived in 2023 and no longer supported. But it is still a widely used tool that works very well.
 
-## Como Instalar
+## How to Install
 
 ```
 dotnet add package Html2Pdf.Lib
 ```
 
-## Como Usar
+## How to Use
 
-Primeiramente, precisamos definir os parâmetros de conversão. Para isso, utilizamos a classe Arguments.
+First, we need to define the conversion parameters. For this, we use the [Arguments class](https://github.com/angelobelchior/Html2Pdf/blob/main/src/Arguments.cs).
 
-Esses parâmetros são opcionais e podem ser configurados conforme a necessidade.
+These parameters are optional and can be configured as needed.
 
-Basicamente eles são os mesmos parâmetros que o wkhtmltopdf aceita. Caso queira saber mais, acesse a [documentação](https://wkhtmltopdf.org/usage/wkhtmltopdf.txt).
- 
+Basically, they are the same parameters that wkhtmltopdf accepts. If you want to know more, check out the [documentation](https://wkhtmltopdf.org/usage/wkhtmltopdf.txt).
+
 ```csharp
 using Html2Pdf.Lib;
 
@@ -110,9 +110,9 @@ var arguments = new Arguments()
     .SetFooterSpacing(23);
 ```
 
-### É possível gerar um PDF de quatro formas:
+### It is possible to generate a PDF in four ways:
 
-#### A partir de um texto HTML
+#### From an HTML Text
 
 ```csharp
 var html = 
@@ -164,14 +164,14 @@ var html =
 var byteArrayHtml = Converter.FromHtml(html, arguments);
 ```
 
-#### A partir de uma URL
+#### From Url
 
 ```csharp
 var url = new Uri("https://en.wikipedia.org/wiki/C_Sharp_(programming_language)");
 var byteArrayUrl = Converter.FromUrl(url), arguments);
 ```
 
-#### A partir de um template HTML utilizando o Razor
+#### From an HTML template using Razor Syntax
 
 ```csharp
 public record Product(string Name, decimal Price);
@@ -241,7 +241,7 @@ var order = new Order("Roberto Rivellino", "Rua São Jorge, 777", "+55 11 912345
 var byteArrayRazorTemplate = Converter.FromRazorTemplate(razorTemplate, order, arguments);
 ```
 
-#### Em batch, a partir de um template HTML utilizando o Razor
+#### From an HTML template using Razor Syntax in Batch
 ```csharp
 var order1 = new Order("Roberto Rivellino", "Rua São Jorge, 777", "+55 11 912345678", [
     new("Product 1", 9.99m),
@@ -271,14 +271,14 @@ for (int i = 0; i < byteArrayRazorTemplateList.Count; i++)
 }
 ```
 
-## Como executar o código localmente
+## How to run the code locally
 
-Para executar em máquinas com macOS ou Linux, você precisa executar o comando ```chmod +x ./wkhtmltopdf/[Operating System Name]/wkhtmltopdf``` para alterar as permissões do arquivo.  
-Além disso, como o processo de compilação copia os arquivos executáveis para uma pasta com o nome do sistema operacional, é necessário executar o comando ```umask 0022``` para garantir que o executável copiado mantenha as permissões corretas.
+To run on macOS or Linux machines, you need to execute the command ```chmod +x ./wkhtmltopdf/[Operating System Name]/wkhtmltopdf``` to change the file permissions.  
+Additionally, since the build process copies the executable files to a folder named after the operating system, you need to run the command ```umask 0022``` to ensure the copied executable retains the correct permissions.
 
-Se você estiver desenvolvendo em uma máquina com Windows, é necessário executar o Visual Studio no modo Administrador.  
-Em alguns casos, será necessário realizar as seguintes etapas:
-- Clique com o botão direito no arquivo `./wkhtmltopdf/Windows/wkhtmltopdf.exe`
-- Vá em "Propriedades" e clique na aba "Compatibilidade"
-- Em seguida, clique em "Alterar configurações para todos os usuários"
-- Marque a opção "Executar este programa como administrador".
+If you are developing on a Windows machine, you need to run Visual Studio in Administrator mode.  
+In some cases, you will need to perform the following steps:
+- Right-click on the file `./wkhtmltopdf/Windows/wkhtmltopdf.exe`
+- Go to "Properties" and click on the "Compatibility" tab
+- Then click on "Change settings for all users"
+- Check the option "Run this program as an administrator".
