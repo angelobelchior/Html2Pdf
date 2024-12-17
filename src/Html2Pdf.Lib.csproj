@@ -7,7 +7,8 @@
         <NoWarn>1701;1702;NU5100;NU5104</NoWarn>
         <LangVersion>latestmajor</LangVersion>
 
-        <Version>0.0.1</Version>
+        <Version>0.0.2</Version>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -15,6 +16,8 @@
     </ItemGroup>
 
     <ItemGroup>
+        <None Include="..\README.md" Pack="true" PackagePath="\"/>
+        
         <Content Include="wkhtmltopdf\Linux\libwkhtmltox.so" Pack="true" PackagePath="contentFiles/any/any/wkhtmltopdf/Linux" PackageCopyToOutput="true">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>

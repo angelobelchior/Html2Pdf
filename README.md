@@ -19,7 +19,7 @@ Porém, é preciso destacar que o [wkhtmltopdf](https://github.com/wkhtmltopdf/w
 ## Como Instalar
 
 ```
-dotnet add package Html2Pdf.Lib --version 0.0.1
+dotnet add package Html2Pdf.Lib
 ```
 
 ## Como Usar
