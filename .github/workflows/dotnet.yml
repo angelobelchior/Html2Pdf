@@ -27,14 +27,20 @@ jobs:
     - name: Test
       run: dotnet test -c Release --no-build --verbosity normal
 
-  publish:
-    environment: PROD
-    needs: build
-    runs-on: ubuntu-latest
+    - name: Pack project
+      run: dotnet pack ./src/Html2Pdf.Lib.csproj -c Release --no-build --output ./artifacts
 
-    steps:
-      - name: Pack project
-        run: dotnet pack ./src/Html2Pdf.Lib.csproj -c Release --no-build --output ./artifacts
+    - name: Publish to NuGet
+      run: dotnet nuget push ./artifacts/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}      
 
-      - name: Publish to NuGet
-        run: dotnet nuget push ./artifacts/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
+#  publish:
+#    environment: PROD
+#    needs: build
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - name: Pack project
+#        run: dotnet pack ./src/Html2Pdf.Lib.csproj -c Release --no-build --output ./artifacts
+#
+#      - name: Publish to NuGet
+#        run: dotnet nuget push ./artifacts/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
