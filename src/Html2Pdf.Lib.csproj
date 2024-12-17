@@ -7,9 +7,21 @@
         <NoWarn>1701;1702;NU5100;NU5104</NoWarn>
         <LangVersion>latestmajor</LangVersion>
 
-        <Version>0.0.4</Version>
+        <Version>0.0.5</Version>
+        <Authors>Angelo Belchior</Authors>
+        <Title>The best tool to convert HTML to PDF in .NET</Title>
+        <Description>
+            Html2Pdf.Lib is an Open Source library licensed under MIT that converts an HTML file into a PDF file.
+            This library was built using **wkhtmltopdf**, a command-line tool for converting HTML files into PDFs using the QT WebKit rendering engine.            
+        </Description>
+        
+        
+        <PackageId>Html2Pdf.Lib</PackageId>
+        <PackageIcon>icon.png</PackageIcon>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageProjectUrl>https://github.com/angelobelchior/Html2Pdf</PackageProjectUrl>
+        <PackageTags>html pdf dotnet .net razor</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>

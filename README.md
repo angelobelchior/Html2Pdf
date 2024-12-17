@@ -3,6 +3,7 @@
 # Html 2 Pdf
 
 [![.NET](https://github.com/angelobelchior/Html2Pdf/actions/workflows/dotnet.yml/badge.svg)](https://github.com/angelobelchior/Html2Pdf/actions/workflows/dotnet.yml)
+[![NuGet version (Html2Pdf.Lib)](https://img.shields.io/nuget/v/Html2Pdf.Lib.svg?style=flat-square)](https://www.nuget.org/packages/Html2Pdf.Lib/)
 
 ## The best tool to convert HTML to PDF in .NET
 
