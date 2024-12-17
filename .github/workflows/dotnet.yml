@@ -31,7 +31,7 @@ jobs:
       run: dotnet test -c Release --no-build --verbosity normal
     
     - name: Pack project
-      run: dotnet pack -c Release Release --no-build --output ./artifacts
+      run: dotnet pack ./src/Html2Pdf.Lib.csproj -c Release --no-build --output ./artifacts
 
     - name: Publish to NuGet
       env:
