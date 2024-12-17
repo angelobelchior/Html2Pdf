@@ -1,4 +1,4 @@
-![Html2Pdf Logo](https://raw.githubusercontent.com/angelobelchior/Html2Pdf/refs/heads/main/src/Html2Pdf.Lib.png)
+![Html2Pdf Logo](https://raw.githubusercontent.com/angelobelchior/Html2Pdf/refs/heads/main/src/icon.png)
 
 # Html 2 Pdf
 
