@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using RazorEngineCore;
+﻿using RazorEngineCore;
 
 namespace Html2Pdf.Lib;
 
@@ -9,6 +7,11 @@ namespace Html2Pdf.Lib;
 /// </summary>
 public static class Converter
 {
+    /// <summary>
+    /// Content Type
+    /// </summary>
+    public static readonly string ContentType = "application/pdf";
+    
     /// <summary>
     /// Converts the HTML to PDF
     /// </summary>

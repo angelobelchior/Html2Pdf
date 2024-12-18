@@ -1,6 +1,3 @@
-using System.IO;
-using System.Runtime.InteropServices;
-
 namespace Html2Pdf.Lib;
 
 internal static class WkHtmlToPdfFile
@@ -17,7 +14,7 @@ internal static class WkHtmlToPdfFile
 
         const string wkhtmltopdf = "wkhtmltopdf";
 
-        var folderPath = "./";
+        var folderPath = AppContext.BaseDirectory;
         folderPath = Path.Combine(folderPath, wkhtmltopdf);
 
         string wkhtmltopdfFilePath;

@@ -7,6 +7,8 @@
         <NoWarn>1701;1702;NU5100;NU5104</NoWarn>
         <LangVersion>latestmajor</LangVersion>
 
+        <ImplicitUsings>enable</ImplicitUsings>
+
         <Version>0.0.5</Version>
         <Authors>Angelo Belchior</Authors>
         <Title>The best tool to convert HTML to PDF in .NET</Title>
@@ -15,16 +17,21 @@
             This library was built using **wkhtmltopdf**, a command-line tool for converting HTML files into PDFs using the QT WebKit rendering engine.            
         </Description>
         
-        
         <PackageId>Html2Pdf.Lib</PackageId>
         <PackageIcon>icon.png</PackageIcon>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageProjectUrl>https://github.com/angelobelchior/Html2Pdf</PackageProjectUrl>
+        <PackageProjectUrl>https://github.com/angelobelchior/Html2Pdf/wiki</PackageProjectUrl>
         <PackageTags>html pdf dotnet .net razor</PackageTags>
+        <RepositoryType>Git</RepositoryType>
+        <RepositoryUrl>https://github.com/angelobelchior/Html2P</RepositoryUrl>
     </PropertyGroup>
 
     <ItemGroup>
+        <Using Include="System.Diagnostics" />
+        <Using Include="System.Text" />
+        <Using Include="System.Runtime.InteropServices" />
+        
         <InternalsVisibleTo Include="Html2Pdf.Tests"/>
     </ItemGroup>
 
