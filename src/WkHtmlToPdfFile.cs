@@ -24,7 +24,8 @@ internal static class WkHtmlToPdfFile
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             wkhtmltopdfFilePath = Path.Combine(folderPath, "Mac", wkhtmltopdf);
         else
-            wkhtmltopdfFilePath = Path.Combine(folderPath, "Linux", wkhtmltopdf);
+            wkhtmltopdfFilePath = wkhtmltopdf;
+            //wkhtmltopdfFilePath = Path.Combine(folderPath, "Linux", wkhtmltopdf);
         
         lock (_lock)
             _wkhtmltopdfFilePath = wkhtmltopdfFilePath;
