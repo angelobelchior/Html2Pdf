@@ -9,7 +9,7 @@
 
         <ImplicitUsings>enable</ImplicitUsings>
 
-        <Version>0.0.7-pre2</Version>
+        <Version>0.0.8</Version>
         <Authors>Angelo Belchior</Authors>
         <Title>The best tool to convert HTML to PDF in .NET</Title>
         <Description>
@@ -39,19 +39,6 @@
         <None Include="icon.png" Pack="true" PackagePath="\"/>
 
         <None Include="..\README.md" Pack="true" PackagePath="\"/>
-        
-        <Content Include="wkhtmltopdf\Linux\libwkhtmltox.so" Pack="true" PackagePath="contentFiles/any/any/wkhtmltopdf/Linux" PackageCopyToOutput="true">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="wkhtmltopdf\Linux\wkhtmltopdf" Pack="true" PackagePath="contentFiles/any/any/wkhtmltopdf/Linux" PackageCopyToOutput="true">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="wkhtmltopdf\Mac\libwkhtmltox.dylib" Pack="true" PackagePath="contentFiles/any/any/wkhtmltopdf/Mac" PackageCopyToOutput="true">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="wkhtmltopdf\Mac\wkhtmltopdf" Pack="true" PackagePath="contentFiles/any/any/wkhtmltopdf/Mac" PackageCopyToOutput="true">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
         <Content Include="wkhtmltopdf\Windows\wkhtmltopdf.exe" Pack="true" PackagePath="contentFiles/any/any/wkhtmltopdf/Windows" PackageCopyToOutput="true">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>

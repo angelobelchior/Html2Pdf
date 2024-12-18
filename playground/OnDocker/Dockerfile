@@ -1,6 +1,6 @@
 ﻿FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 
-# Install dependencies for wkhtmltopdf
+# Install wkhtmltopdf
 RUN apt-get -y update && apt-get -y upgrade
 RUN apt-get -y install wkhtmltopdf
 RUN wkhtmltopdf --version

@@ -274,8 +274,22 @@ for (int i = 0; i < byteArrayRazorTemplateList.Count; i++)
 
 ## How to run the code locally
 
-To run on macOS or Linux machines, you need to execute the command ```chmod +x ./wkhtmltopdf/[Operating System Name]/wkhtmltopdf``` to change the file permissions.  
-Additionally, since the build process copies the executable files to a folder named after the operating system, you need to run the command ```umask 0022``` to ensure the copied executable retains the correct permissions.
+### macOS
+Install the [wkhtmltopdf](https://wkhtmltopdf.org/downloads.html) executable for macOS. Or use the following command to install it via Homebrew:
+
+```
+brew install wkhtmltopdf
+```
+
+### Linux
+Install the [wkhtmltopdf](https://wkhtmltopdf.org/downloads.html) executable for Linux. Or use the following command to install it via APT:
+
+```
+apt-get -y update && apt-get -y upgrade
+apt-get -y install wkhtmltopdf
+```
+
+### Windows
 
 If you are developing on a Windows machine, you need to run Visual Studio in Administrator mode.  
 In some cases, you will need to perform the following steps:
