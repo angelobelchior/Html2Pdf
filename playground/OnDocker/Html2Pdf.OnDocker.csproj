@@ -9,7 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Html2Pdf.Lib" Version="0.0.6" />
+        <PackageReference Include="Html2Pdf.Lib" Version="0.0.7-pre" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0"/>
     </ItemGroup>
 

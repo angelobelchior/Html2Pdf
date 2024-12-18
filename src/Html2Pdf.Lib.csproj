@@ -9,7 +9,7 @@
 
         <ImplicitUsings>enable</ImplicitUsings>
 
-        <Version>0.0.7-pre</Version>
+        <Version>0.0.7-pre2</Version>
         <Authors>Angelo Belchior</Authors>
         <Title>The best tool to convert HTML to PDF in .NET</Title>
         <Description>

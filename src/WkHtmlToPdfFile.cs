@@ -30,7 +30,7 @@ internal static class WkHtmlToPdfFile
         lock (_lock)
             _wkhtmltopdfFilePath = wkhtmltopdfFilePath;
 
-        if (!File.Exists(_wkhtmltopdfFilePath))
+        if (!File.Exists(_wkhtmltopdfFilePath) && !RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             throw new FileNotFoundException($"{_wkhtmltopdfFilePath} not found");
 
         return _wkhtmltopdfFilePath;
