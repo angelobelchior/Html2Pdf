@@ -28,22 +28,15 @@ internal static class WkHtmlToPdf
 
             return pdfFile;
         }
-#if DEBUG
         catch (Exception e)
         {
-            if (!string.IsNullOrEmpty(error)) throw new Exception(error);
-
+            SendWarningWhenExceptionOccurs();
             Console.WriteLine(e);
-
-            throw;
+            if (!string.IsNullOrEmpty(error))
+                throw new Exception(error);
+            else
+                throw;
         }
-#else
-        catch
-        {
-            if (!string.IsNullOrEmpty(error)) throw new Exception(error);
-            throw;
-        }
-#endif
         finally
         {
             if (File.Exists(tempFileHtml)) File.Delete(tempFileHtml);
@@ -65,26 +58,18 @@ internal static class WkHtmlToPdf
         try
         {
             arguments += $" {url} {tempFilePdf}";
-
             (var pdfFile, error) = Execute(arguments, tempFilePdf);
-
             return pdfFile;
         }
-#if DEBUG
         catch (Exception e)
         {
-            if (!string.IsNullOrEmpty(error)) throw new Exception(error);
-
+            SendWarningWhenExceptionOccurs();
             Console.WriteLine(e);
-            throw;
+            if (!string.IsNullOrEmpty(error))
+                throw new Exception(error);
+            else
+                throw;
         }
-#else
-        catch 
-        {
-            if (!string.IsNullOrEmpty(error)) throw new Exception(error);
-            throw;
-        }
-#endif
         finally
         {
             if (File.Exists(tempFilePdf)) File.Delete(tempFilePdf);
@@ -112,13 +97,13 @@ internal static class WkHtmlToPdf
 
         return (ms.ToArray(), error);
     }
-
+    
     private static Process CreateProcess(string arguments)
     {
 #if DEBUG
         Console.WriteLine(arguments);
 #endif
-        
+
         var wkhtmltopdfFilePath = WkHtmlToPdfFile.GetFilePath();
         var process = new Process();
         process.StartInfo = new ProcessStartInfo
@@ -141,6 +126,22 @@ internal static class WkHtmlToPdf
             if (c > 127) escaped.AppendFormat("&#{0};", c);
             else escaped.Append(c);
         }
+
         return escaped.ToString();
+    }
+
+    private static void SendWarningWhenExceptionOccurs()
+    {
+        if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) return;
+        
+        Console.WriteLine("Make sure wkhtmltopdf is installed correctly...");
+        
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            Console.WriteLine("> brew install wkhtmltopdf");
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            Console.WriteLine("> apt-get -y update && apt-get -y upgrade");
+            Console.WriteLine("> apt-get -y install wkhtmltopdf");
+        }
     }
 }

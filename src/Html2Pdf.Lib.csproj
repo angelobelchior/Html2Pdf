@@ -39,6 +39,7 @@
         <None Include="icon.png" Pack="true" PackagePath="\"/>
 
         <None Include="..\README.md" Pack="true" PackagePath="\"/>
+        
         <Content Include="wkhtmltopdf\Windows\wkhtmltopdf.exe" Pack="true" PackagePath="contentFiles/any/any/wkhtmltopdf/Windows" PackageCopyToOutput="true">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
