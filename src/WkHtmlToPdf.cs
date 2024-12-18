@@ -18,10 +18,9 @@ internal static class WkHtmlToPdf
         var tempFileHtml = $"{tempFile}.html";
         var tempFilePdf = $"{tempFile}.pdf";
 
-        var rawHtml = EscapeNonAsciiCharacters(html);
         try
         {
-            File.WriteAllText(tempFileHtml, rawHtml);
+            File.WriteAllText(tempFileHtml, html);
             arguments += $" {tempFileHtml} {tempFilePdf}";
 
             (var pdfFile, error) = Execute(arguments, tempFilePdf);
@@ -116,18 +115,6 @@ internal static class WkHtmlToPdf
         };
 
         return process;
-    }
-
-    private static string EscapeNonAsciiCharacters(string html)
-    {
-        var escaped = new StringBuilder(html.Length + (int)(html.Length * 0.1));
-        foreach (var c in html)
-        {
-            if (c > 127) escaped.AppendFormat("&#{0};", c);
-            else escaped.Append(c);
-        }
-
-        return escaped.ToString();
     }
 
     private static void SendWarningWhenExceptionOccurs()

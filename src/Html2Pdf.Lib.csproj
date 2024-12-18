@@ -9,7 +9,7 @@
 
         <ImplicitUsings>enable</ImplicitUsings>
 
-        <Version>0.0.8</Version>
+        <Version>0.0.9</Version>
         <Authors>Angelo Belchior</Authors>
         <Title>The best tool to convert HTML to PDF in .NET</Title>
         <Description>
@@ -46,9 +46,6 @@
         <Content Include="wkhtmltopdf\Windows\wkhtmltox.dll" Pack="true" PackagePath="contentFiles/any/any/wkhtmltopdf/Windows" PackageCopyToOutput="true">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <None Update="icon.png">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
     </ItemGroup>
 
     <ItemGroup>
