@@ -1,8 +1,19 @@
 ﻿using Html2Pdf.Lib;
+using Microsoft.Extensions.Logging;
 
-var pathToSamples = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+var pathToSamples = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+
+//log provider
+ILoggerFactory factory = LoggerFactory.Create(builder =>
+{
+    builder.AddConsole();
+    builder.SetMinimumLevel(LogLevel.Debug);
+});
+ILogger logger = factory.CreateLogger("Program");
+
 
 Console.WriteLine("Initializing HTML to PDF conversion...");
+
 
 var arguments = new Arguments()
     // When jpeg compressing images use this quality (default 94)
@@ -78,8 +89,15 @@ var arguments = new Arguments()
     .SetFooterText("Footer Text Sample 1", TextAlignment.Center, "Verdana", 15)
 
     // Spacing between footer and content in mm (default 0)
-    .SetFooterSpacing(23);
-    
+    .SetFooterSpacing(23)
+
+    //add current ILogger
+    .AddLogger(logger)
+
+    //set timeout convert to PDF
+    .TimeoutConvert(10000);
+
+
 var html =
     """
     <!DOCTYPE html>
@@ -267,13 +285,39 @@ var html =
     </body>
     </html>
     """;
-var byteArrayHtml = Converter.FromHtml(html, arguments);
-File.WriteAllBytes($"{pathToSamples}/html2pdfHtml.pdf", byteArrayHtml);
+var resultHtml = Converter.FromHtml(html, arguments);
+if (resultHtml.HasValue)
+{
+    File.WriteAllBytes(Path.Combine(pathToSamples, "html2pdfHtml.pdf"), resultHtml.Content!);
+}
+else
+{
+    Console.WriteLine($"Erro: {resultHtml.Error?.ToString()}");
+}
+resultHtml = Converter.FromHtml(Path.Combine(pathToSamples, "html2directpdfHtml.pdf"), html, arguments);
+if (!resultHtml.HasValue)
+{
+    Console.WriteLine($"Erro: {resultHtml.Error?.ToString()}");
+}
+
 
 // ----------------------------------------------------------
 
-var byteArrayUrl = Converter.FromUrl(new("https://en.wikipedia.org/wiki/C_Sharp_(programming_language)"), arguments);
-File.WriteAllBytes($"{pathToSamples}/html2pdfUrl.pdf", byteArrayUrl);
+var resultUrl = Converter.FromUrl(new("https://en.wikipedia.org/wiki/C_Sharp_(programming_language)"), arguments);
+if (resultUrl.HasValue)
+{
+    File.WriteAllBytes(Path.Combine(pathToSamples, "html2pdfUrl.pdf"), resultUrl.Content!);
+}
+else
+{
+    Console.WriteLine($"Erro: {resultUrl.Error?.ToString()}");
+}
+resultUrl = Converter.FromUrl(Path.Combine(pathToSamples, "html2DirectpdfUrl.pdf"), new("https://en.wikipedia.org/wiki/C_Sharp_(programming_language)"), arguments);
+if (!resultUrl.HasValue)
+{
+    Console.WriteLine($"Erro: {resultUrl.Error?.ToString()}");
+}
+
 
 // ----------------------------------------------------------
 
@@ -282,6 +326,7 @@ var razorTemplate =
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+    <meta charset="UTF-8">
     <title>Customer Details</title>
     <style>
         table {
@@ -295,6 +340,9 @@ var razorTemplate =
         th {
             background-color: #f4f4f4;
             text-align: left;
+        }
+        tr { 
+            page-break-inside: avoid; 
         }
     </style>
 </head>
@@ -333,14 +381,30 @@ var razorTemplate =
 </html>
 """;
 
-var order1 = new Order("Roberto Rivellino", "Rua S&atilde;o Jorge, 777", "+55 11 912345678", [
-    new("Product 1", 9.99m),
-    new("Product 2", 19.99m),
-    new("Product 3", 29.99m),
-    new("Product 4", 39.99m)
-]);
-var byteArrayRazorTemplate = Converter.FromRazorTemplate(razorTemplate, order1, arguments);
-File.WriteAllBytes($"{pathToSamples}/html2pdfRazorTemplate.pdf", byteArrayRazorTemplate);
+var lstprod = new List<Product>();
+for (int i = 0; i < 20; i++)
+{
+    lstprod.Add(new Product($"Product{i}", 9.99m));
+}
+
+var order1 = new Order("Roberto Rivellino", "Rua S&atilde;o Jorge, 777", "+55 11 912345678", lstprod);
+
+var resultRazorTemplate = Converter.FromRazorTemplate(razorTemplate, order1, arguments);
+if (resultRazorTemplate.HasValue)
+{
+    File.WriteAllBytes(Path.Combine(pathToSamples, "html2pdfRazorTemplate.pdf"), resultRazorTemplate.Content!);
+}
+else
+{
+    Console.WriteLine($"Erro: {resultHtml.Error?.ToString()}");
+}
+resultRazorTemplate = Converter.FromRazorTemplate(
+    Path.Combine(pathToSamples, "html2DirectpdfRazorTemplate.pdf"), razorTemplate, order1, arguments);
+if (!resultRazorTemplate.HasValue)
+{
+    Console.WriteLine($"Erro: {resultRazorTemplate.Error?.ToString()}");
+}
+
 
 var order2 = new Order("Sócrates", "Rua das Alamedas, 888", "+55 11 912345678", [
     new("Product 1", 2.99m),
@@ -353,13 +417,20 @@ var order3 = new Order("Biro Biro", "Avenida das Orquídeas, 999", "+55 11 91234
     new("Product 2", 5.99m),
 ]);
 
-var order4 = new Order("Casagrande", "Estrada das Flores, 456", "+55 11 912345678", [ ]);
+var order4 = new Order("Casagrande", "Estrada das Flores, 456", "+55 11 912345678", []);
 
-var byteArrayRazorTemplateList = Converter.FromRazorTemplateBatch(razorTemplate, [ order1, order2, order3, order4 ], arguments);
-for (int i = 0; i < byteArrayRazorTemplateList.Count; i++)
+var resultRazorTemplateList = Converter.FromRazorTemplateBatch(razorTemplate, [order1, order2, order3, order4], arguments);
+for (int i = 0; i < resultRazorTemplateList.Count; i++)
 {
-    var pdf = byteArrayRazorTemplateList.ElementAt(i);
-    File.WriteAllBytes($"{pathToSamples}/html2pdfRazorTemplate{i}.pdf", pdf);
+    var itemresult = resultRazorTemplateList.ElementAt(i);
+    if (itemresult.HasValue)
+    {
+        File.WriteAllBytes(Path.Combine(pathToSamples, $"html2pdfRazorTemplate{i}.pdf"), itemresult.Content!);
+    }
+    else
+    {
+        Console.WriteLine($"Erro: {itemresult.Error?.ToString()}");
+    }
 }
 
 Console.WriteLine("End...");

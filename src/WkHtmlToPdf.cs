@@ -1,3 +1,9 @@
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Text;
+using Microsoft.Extensions.Logging;
+
 namespace Html2Pdf.Lib;
 
 internal static class WkHtmlToPdf
@@ -5,130 +11,191 @@ internal static class WkHtmlToPdf
     /// <summary>
     /// Converts an HTML content string to PDF byte array format.
     /// </summary>
-    /// <param name="arguments">Arguments that will be passed to wkhtmltopdf binary.</param>
+    /// <param name="timeout">Timeout to convert to PDF in milliseconds. If null value, it will be changed to default value <see cref="Arguments"/> DefaultTimeout</param>
+    /// <param name="logger"><see cref="ILogger"/>Logger interface</param>
     /// <param name="html">String containing HTML code that should be converted to PDF.</param>
-    /// <returns>PDF as byte array.</returns>
-    public static byte[] ConvertFromHtml(string html, string arguments = "")
+    /// <param name="arguments">Arguments that will be passed to wkhtmltopdf binary.</param>
+    /// <param name="filename">full path to file PDF</param>
+    /// <returns>PDF as byte array or file in type <see cref="ConvertResult"/></returns>
+    public static ConvertResult ConvertFromHtml(int? timeout, ILogger? logger, string html, string arguments = "", string? filename = null)
     {
         if (string.IsNullOrEmpty(html))
             throw new ArgumentNullException(nameof(html));
-
-        var error = string.Empty;
         var tempFile = Guid.NewGuid();
         var tempFileHtml = $"{tempFile}.html";
-        var tempFilePdf = $"{tempFile}.pdf";
+        var filePdf = filename ?? $"{tempFile}.pdf";
+        var istmpfile = string.IsNullOrEmpty(filename);
 
+        timeout ??= Arguments.DefaultTimeout;
+
+        if (!filePdf.EndsWith(".pdf", StringComparison.CurrentCultureIgnoreCase))
+        {
+            filePdf += ".pdf";
+        }
+
+        ConvertResult result;
+        var sw = Stopwatch.StartNew();
         try
         {
             File.WriteAllText(tempFileHtml, html);
-            arguments += $" {tempFileHtml} {tempFilePdf}";
+            arguments += $" \"{tempFileHtml}\" \"{filePdf}\"";
 
-            (var pdfFile, error) = Execute(arguments, tempFilePdf);
+            (var bytesFile, var error) = Execute(timeout.Value, logger, arguments, filePdf, istmpfile);
 
-            return pdfFile;
+            result = new ConvertResult(sw.Elapsed,
+                istmpfile ? bytesFile : null,
+                istmpfile ? null : filePdf,
+                string.IsNullOrEmpty(error) ? null : new Exception(error));
         }
         catch (Exception e)
         {
-            SendWarningWhenExceptionOccurs();
-            Console.WriteLine(e);
-            if (!string.IsNullOrEmpty(error))
-                throw new Exception(error);
-            else
-                throw;
+            logger?.LogError(e, "Html2Pdf.Lib: Error ConvertFromHtml");
+            result = new ConvertResult(sw.Elapsed, null, null, e);
         }
         finally
         {
-            if (File.Exists(tempFileHtml)) File.Delete(tempFileHtml);
-            if (File.Exists(tempFilePdf)) File.Delete(tempFilePdf);
+            if (File.Exists(tempFileHtml))
+            {
+                try
+                {
+                    File.Delete(tempFileHtml);
+                }
+                catch (Exception e)
+                {
+                    logger?.LogError(e, "Html2Pdf.Lib ConvertFromHtml: cannot remove tmpfile : {tmp}", tempFileHtml);
+                    result = new ConvertResult(sw.Elapsed, null, null, e);
+                }
+            }
+            if (istmpfile)
+            {
+                if (File.Exists(filePdf))
+                {
+                    try
+                    {
+                        File.Delete(filePdf);
+                    }
+                    catch (Exception e)
+                    {
+                        logger?.LogError(e, "Html2Pdf.Lib ConvertFromHtml: cannot remove tmpfile : {tmp}", filePdf);
+                        result = new ConvertResult(sw.Elapsed, null, null, e);
+                    }
+                }
+            }
         }
+        return result;
     }
 
     /// <summary>
     /// Converts an HTML content string to PDF byte array format.
     /// </summary>
-    /// <param name="arguments">Arguments that will be passed to wkhtmltopdf binary.</param>
+    /// <param name="timeout">Timeout to convert to PDF in milliseconds. If null value, it will be changed to default value <see cref="Arguments"/> DefaultTimeout</param>
+    /// <param name="logger"><see cref="ILogger"/>Logger interface</param>
     /// <param name="url">URL that should be converted to PDF.</param>
-    /// <returns>PDF as byte array.</returns>
-    public static byte[] ConvertFromUrl(Uri url, string arguments = "")
+    /// <param name="arguments">Arguments that will be passed to wkhtmltopdf binary.</param>
+    /// <param name="filename">full path to file PDF</param>
+    /// <returns>PDF as byte array or file in type <see cref="ConvertResult"/></returns>
+    public static ConvertResult ConvertFromUrl(int? timeout, ILogger? logger, Uri url, string arguments = "", string? filename = null)
     {
-        var error = string.Empty;
-        var tempFilePdf = $"{Guid.NewGuid()}.pdf";
+        var filePdf = filename ?? $"{Guid.NewGuid()}.pdf";
+        var istmpfile = string.IsNullOrEmpty(filename);
 
+        timeout ??= Arguments.DefaultTimeout;
+
+        if (!filePdf.EndsWith(".pdf", StringComparison.CurrentCultureIgnoreCase))
+        {
+            filePdf += ".pdf";
+        }
+
+        ConvertResult result;
+        var sw = Stopwatch.StartNew();
         try
         {
-            arguments += $" {url} {tempFilePdf}";
-            (var pdfFile, error) = Execute(arguments, tempFilePdf);
-            return pdfFile;
+            arguments += $" \"{url}\" \"{filePdf}\"";
+
+            string? error;
+            (var bytesFile, error) = Execute(timeout.Value, logger, arguments, filePdf, istmpfile);
+
+
+            result = new ConvertResult(sw.Elapsed,
+                istmpfile ? bytesFile : null,
+                istmpfile ? null : filePdf,
+                string.IsNullOrEmpty(error) ? null : new Exception(error));
         }
         catch (Exception e)
         {
-            SendWarningWhenExceptionOccurs();
-            Console.WriteLine(e);
-            if (!string.IsNullOrEmpty(error))
-                throw new Exception(error);
-            else
-                throw;
+            logger?.LogError(e, "Error ConvertFromUrl");
+            result = new ConvertResult(sw.Elapsed, null, null, e);
         }
         finally
         {
-            if (File.Exists(tempFilePdf)) File.Delete(tempFilePdf);
+            if (istmpfile)
+            {
+                if (File.Exists(filePdf))
+                {
+                    try
+                    {
+                        File.Delete(filePdf);
+                    }
+                    catch (Exception e)
+                    {
+                        logger?.LogWarning(e, "Html2Pdf.Lib ConvertFromUrl: cannot remove tmpfile : {tmp}", filePdf);
+                        result = new ConvertResult(sw.Elapsed, null, null, e);
+                    }
+                }
+            }
         }
+        return result;
     }
 
-    private static (byte[] pdfFile, string error) Execute(string arguments, string tempFilePdf)
+    private static (byte[] pdfFile, string error) Execute(int timeout, ILogger? logger, string arguments, string filePdf, bool istmpfile)
     {
         arguments = "-q " + arguments.Trim();
 
-        using var process = CreateProcess(arguments);
-        process.Start();
-        var error = process.StandardError.ReadToEnd();
-        process.WaitForExit();
-
-#if DEBUG
-        Console.WriteLine(error);
-#endif
-
-        using var ms = new MemoryStream();
-        using var fileStream = new FileStream(tempFilePdf, FileMode.Open, FileAccess.Read);
-        fileStream.CopyTo(ms);
-
-        if (ms.Length == 0) throw new Exception(error);
-
-        return (ms.ToArray(), error);
-    }
-    
-    private static Process CreateProcess(string arguments)
-    {
-#if DEBUG
-        Console.WriteLine(arguments);
-#endif
-
-        var wkhtmltopdfFilePath = WkHtmlToPdfFile.GetFilePath();
-        var process = new Process();
-        process.StartInfo = new ProcessStartInfo
+        string error = string.Empty;
+        int exitcode;
+        using (var process = CreateProcess(logger, arguments))
         {
-            FileName = wkhtmltopdfFilePath,
-            Arguments = arguments,
-            UseShellExecute = false,
-            RedirectStandardError = true,
-            CreateNoWindow = true
-        };
-
-        return process;
-    }
-
-    private static void SendWarningWhenExceptionOccurs()
-    {
-        if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) return;
-        
-        Console.WriteLine("Make sure wkhtmltopdf is installed correctly...");
-        
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            Console.WriteLine("> brew install wkhtmltopdf");
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-        {
-            Console.WriteLine("> apt-get -y update && apt-get -y upgrade");
-            Console.WriteLine("> apt-get -y install wkhtmltopdf");
+            process.Start();
+            if (!process.WaitForExit(timeout) && !process.HasExited)
+            {
+                error = $"Timeout Execute Process {process.ProcessName}: {timeout}ms";
+                process.Kill();
+            }
+            else
+            {
+                error = process.StandardError.ReadToEnd();
+            }
+            exitcode = process.ExitCode;
         }
+        if (File.Exists(filePdf) && exitcode != 0 && !istmpfile)
+        {
+            logger?.LogError("Html2Pdf.Lib Execute exitcode({exitcode}) for file {filePdf}", exitcode, filePdf);
+        }
+        if (!File.Exists(filePdf) || exitcode != 0 || !istmpfile)
+        {
+            return (Array.Empty<byte>(), error);
+        }
+        //only for tmp PDF file
+        using var ms = new MemoryStream();
+        using var fileStream = new FileStream(filePdf, FileMode.Open, FileAccess.Read);
+        fileStream.CopyTo(ms);
+        return (ms.ToArray(), string.Empty);
+    }
+
+    private static Process CreateProcess(ILogger? logger, string arguments)
+    {
+        logger?.LogDebug("{value}", arguments);
+        return new Process
+        {
+            StartInfo = new ProcessStartInfo
+            {
+                FileName = WkHtmlToPdfFile.GetFilePath(),
+                Arguments = arguments,
+                UseShellExecute = false,
+                RedirectStandardInput = true,
+                RedirectStandardError = true,
+                CreateNoWindow = true
+            }
+        };
     }
 }
