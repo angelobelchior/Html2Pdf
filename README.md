@@ -326,6 +326,17 @@ This command should be right below ```FROM mcr.microsoft.com/dotnet/aspnet:<<ver
 You can get a complete example by accessing the link
 [https://github.com/angelobelchior/Html2Pdf/tree/main/playground/OnDocker](https://github.com/angelobelchior/Html2Pdf/tree/main/playground/OnDocker)
 
+### Running on Azure App Services
+
+To run on Azure App Services, you need to install the wkhtmltopdf executable. 
+You can do this by adding the following startup command in the Azure App Service configuration:
+
+```
+startup-command: 'apt-get -y install wkhtmltopdf'
+```
+
+For more information, see the link below [https://learn.microsoft.com/en-us/answers/questions/1282899/how-does-startup-commands-work-on-an-azure-app-ser](https://learn.microsoft.com/en-us/answers/questions/1282899/how-does-startup-commands-work-on-an-azure-app-ser)
+
 ## How to run the code locally
 
 ### macOS
