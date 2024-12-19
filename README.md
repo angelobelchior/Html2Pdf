@@ -24,6 +24,10 @@ However, it is important to note that [wkhtmltopdf](https://github.com/wkhtmltop
 - Added new Argument configuration : TimeoutConvert 
     - Conversion now has a default limit of 30 seconds and a minimum of 500 milliseconds. This is valid for any possible execution failure or infinite loop/deadlock.    
 - Added target frameworks: .NET9, .NET8, .NETSTANDARD2.1.
+ - Added new methods for direct conversion to PDF file (faster. No need to create, read to bytes and delete):
+    - FromHtml(string filename, string html, Arguments? arguments = null)
+    - FromUrl(string filename, Uri url, Arguments? arguments = null)
+    - FromRazorTemplate\<T\>(string filename, string razorTemplate, T model, Arguments? arguments = null)
 - Changed return type convert from bytes[] to new class ConvertResult:
     - Property Content = PDF in bytes[].
     - Property HasValue property = boolean if conversion is successful.
