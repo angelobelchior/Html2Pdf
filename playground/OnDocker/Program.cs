@@ -11,6 +11,7 @@ var razorTemplate =
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+    <meta charset="UTF-8">
     <title>Customer Details</title>
     <style>
         table {
@@ -24,6 +25,9 @@ var razorTemplate =
         th {
             background-color: #f4f4f4;
             text-align: left;
+        }
+        tr { 
+            page-break-inside: avoid; 
         }
     </style>
 </head>
@@ -69,12 +73,15 @@ app.MapGet("/get-pdf", () =>
             new("Product 2", 19.99m),
             new("Product 3", 29.99m)
         ]);
-        var pdf = Converter.FromRazorTemplate(
+        var resultpdf = Converter.FromRazorTemplate(
             razorTemplate, 
             order, 
             new Arguments().SetPageOrientation(PageOrientation.Landscape));
-        
-        return Results.File(pdf, Converter.ContentType);
+        if (resultpdf.HasValue)
+        {
+            return Results.File(resultpdf.Content!, Converter.ContentType);
+        }
+        return Results.InternalServerError(resultpdf.Error==null?"Erro Created PDF":resultpdf.Error.Message);
     })
     .WithName("GetPdf");
 
