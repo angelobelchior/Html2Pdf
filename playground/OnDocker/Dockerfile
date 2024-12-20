@@ -1,9 +1,9 @@
 ﻿FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 
 # Install wkhtmltopdf
-RUN apt-get -y update && apt-get -y upgrade
-RUN apt-get -y install wkhtmltopdf
-RUN wkhtmltopdf --version
+#RUN apt-get -y update && apt-get -y upgrade
+#RUN apt-get -y install wkhtmltopdf
+#RUN wkhtmltopdf --version
 
 USER $APP_UID
 WORKDIR /app

@@ -17,8 +17,25 @@ There are many other parameters to configure the conversion, such as page size, 
 
 However, it is important to note that [wkhtmltopdf](https://github.com/wkhtmltopdf/wkhtmltopdf) was discontinued in 2020, with its [repository](https://github.com/wkhtmltopdf/wkhtmltopdf) archived in 2023 and no longer supported. But it is still a widely used tool that works very well.
 
-## How to Install
+## What's new in V0.1.0
 
+- Added new Argument configuration : AddLogger 
+    - All error messages can be automatically written to the log provider.
+- Added new Argument configuration : TimeoutConvert 
+    - Conversion now has a default limit of 30 seconds and a minimum of 500 milliseconds. This is valid for any possible execution failure or infinite loop/deadlock.    
+- Added target frameworks: .NET9, .NET8, .NETSTANDARD2.1.
+ - Added new methods for direct conversion to PDF file (faster. No need to create, read to bytes and delete):
+    - FromHtml(string filename, string html, Arguments? arguments = null)
+    - FromUrl(string filename, Uri url, Arguments? arguments = null)
+    - FromRazorTemplate\<T\>(string filename, string razorTemplate, T model, Arguments? arguments = null)
+- Changed return type convert from bytes[] to new class ConvertResult:
+    - Property Content = PDF in bytes[].
+    - Property HasValue property = boolean if conversion is successful.
+    - Property FileName = Name of the PDF file created when the filename parameter is used. the Content property is null in this case.
+    - Property Error = The exception generated when an error occurs during conversion.
+    - Property Elapsedtime = Elapsed time to perform the conversion.
+ 
+## How to Install
 ```
 dotnet add package Html2Pdf.Lib
 ```
@@ -33,6 +50,14 @@ Basically, they are the same parameters that wkhtmltopdf accepts. If you want to
 
 ```csharp
 using Html2Pdf.Lib;
+
+//log provider for console app
+ILoggerFactory factory = LoggerFactory.Create(builder =>
+{
+    builder.AddConsole();
+    builder.SetMinimumLevel(LogLevel.Debug);
+});
+ILogger logger = factory.CreateLogger("Program");
 
 var arguments = new Arguments()
     // When jpeg compressing images use this quality (default 94)
@@ -109,6 +134,12 @@ var arguments = new Arguments()
 
     // Spacing between footer and content in mm (default 0)
     .SetFooterSpacing(23);
+
+    //add current ILogger
+    .AddLogger(logger)
+
+    //set timeout convert to PDF
+    .TimeoutConvert(10000);
 ```
 
 ### It is possible to generate a PDF in four ways:
@@ -162,14 +193,32 @@ var html =
 </html>
 """;
 
-var byteArrayHtml = Converter.FromHtml(html, arguments);
+var resultConvert = Converter.FromHtml(html, arguments);
+var elapsedtimeConvert = resultConvert.Elapsedtime;
+if (resultHtml.HasValue)
+{
+   var bytespdf = resultConvert.Content!
+}
+else
+{
+   //Erro See resultConvert.Error
+}
 ```
 
 #### From Url
 
 ```csharp
 var url = new Uri("https://en.wikipedia.org/wiki/C_Sharp_(programming_language)");
-var byteArrayUrl = Converter.FromUrl(url), arguments);
+var resultConvert = Converter.FromUrl(url), arguments);
+var elapsedtimeConvert = resultConvert.Elapsedtime;
+if (resultHtml.HasValue)
+{
+   var bytespdf = resultConvert.Content!
+}
+else
+{
+   //Erro See resultConvert.Error
+}
 ```
 
 #### From an HTML template using Razor Syntax
@@ -183,6 +232,7 @@ var razorTemplate =
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+    <meta charset="UTF-8">
     <title>Customer Details</title>
     <style>
         table {
@@ -239,7 +289,16 @@ var order = new Order("Roberto Rivellino", "Rua São Jorge, 777", "+55 11 912345
     new("Product 2", 19.99m),
     new("Product 3", 29.99m)
 ]);
-var byteArrayRazorTemplate = Converter.FromRazorTemplate(razorTemplate, order, arguments);
+var resultConvert = Converter.FromRazorTemplate(razorTemplate, order, arguments);
+var elapsedtimeConvert = resultConvert.Elapsedtime;
+if (resultHtml.HasValue)
+{
+   var bytespdf = resultConvert.Content!
+}
+else
+{
+   //Erro See resultConvert.Error
+}
 ```
 
 #### From an HTML template using Razor Syntax in Batch
@@ -264,101 +323,19 @@ var order3 = new Order("Biro Biro", "Avenida das Orquídeas, 999", "+55 11 91234
 
 var order4 = new Order("Casagrande", "Estrada das Flores, 456", "+55 11 912345678", [ ]);
 
-var byteArrayRazorTemplateList = Converter.FromRazorTemplateBatch(razorTemplate, [ order1, order2, order3, order4 ], arguments);
-for (int i = 0; i < byteArrayRazorTemplateList.Count; i++)
+var resultConvertRazorTemplateList = Converter.FromRazorTemplateBatch(razorTemplate, [ order1, order2, order3, order4 ], arguments);
+for (int i = 0; i < resultConvertRazorTemplateList.Count; i++)
 {
-    var pdf = byteArrayRazorTemplateList.ElementAt(i);
+    var resultConvert = resultConvertRazorTemplateList.ElementAt(i);
+    var elapsedtimeConvert = resultConvert.Elapsedtime;
+    if (resultHtml.HasValue)
+    {
+        var bytespdf = resultConvert.Content!
+    }
+    else
+    {
+        //Erro See resultConvert.Error
+    }
     ...
 }
 ```
-
-## Running on Docker
-
-Basically you need to install wkhtmltopdf. Below is an example of a docker file.
-
-
-```dockerfile
-FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
-
-# Install wkhtmltopdf
-RUN apt-get -y update && apt-get -y upgrade
-RUN apt-get -y install wkhtmltopdf
-RUN wkhtmltopdf --version
-
-USER $APP_UID
-WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
-
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
-ARG BUILD_CONFIGURATION=Release
-WORKDIR /src
-COPY ["playground/OnDocker/Html2Pdf.OnDocker.csproj", "playground/OnDocker/"]
-RUN dotnet restore "playground/OnDocker/Html2Pdf.OnDocker.csproj"
-COPY . .
-WORKDIR "/src/playground/OnDocker"
-RUN dotnet build "Html2Pdf.OnDocker.csproj" -c $BUILD_CONFIGURATION -o /app/build
-
-FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "Html2Pdf.OnDocker.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
-
-FROM base AS final
-WORKDIR /app
-COPY --from=publish /app/publish .
-
-ENTRYPOINT ["dotnet", "Html2Pdf.OnDocker.dll"]
-```
-
-The most important part of this file is...
-
-```dockerfile
-FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
-
-# Install wkhtmltopdf
-RUN apt-get -y update && apt-get -y upgrade
-RUN apt-get -y install wkhtmltopdf
-RUN wkhtmltopdf --version
-```
-
-This command should be right below ```FROM mcr.microsoft.com/dotnet/aspnet:<<version>> AS base```
-
-You can get a complete example by accessing the link
-[https://github.com/angelobelchior/Html2Pdf/tree/main/playground/OnDocker](https://github.com/angelobelchior/Html2Pdf/tree/main/playground/OnDocker)
-
-### Running on Azure App Services
-
-To run on Azure App Services, you need to install the wkhtmltopdf executable. 
-You can do this by adding the following startup command in the Azure App Service configuration:
-
-```
-startup-command: 'apt-get -y install wkhtmltopdf'
-```
-
-For more information, see the link below [https://learn.microsoft.com/en-us/answers/questions/1282899/how-does-startup-commands-work-on-an-azure-app-ser](https://learn.microsoft.com/en-us/answers/questions/1282899/how-does-startup-commands-work-on-an-azure-app-ser)
-
-## How to run the code locally
-
-### macOS
-Install the [wkhtmltopdf](https://wkhtmltopdf.org/downloads.html) executable for macOS. Or use the following command to install it via Homebrew:
-
-```
-brew install wkhtmltopdf
-```
-
-### Linux
-Install the [wkhtmltopdf](https://wkhtmltopdf.org/downloads.html) executable for Linux. Or use the following command to install it via APT:
-
-```
-apt-get -y update && apt-get -y upgrade
-apt-get -y install wkhtmltopdf
-```
-
-### Windows
-
-If you are developing on a Windows machine, you need to run Visual Studio in Administrator mode.  
-In some cases, you will need to perform the following steps:
-- Right-click on the file `./wkhtmltopdf/Windows/wkhtmltopdf.exe`
-- Go to "Properties" and click on the "Compatibility" tab
-- Then click on "Change settings for all users"
-- Check the option "Run this program as an administrator".

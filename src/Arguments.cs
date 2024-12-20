@@ -1,3 +1,6 @@
+using System.Linq;
+using System.Text;
+
 namespace Html2Pdf.Lib;
 
 /// <summary>
