@@ -1,17 +1,24 @@
-namespace Html2Pdf.Lib;
+﻿// ***************************************************************************************
+// MIT LICENCE
+// The maintenance and evolution is maintained by the Html2Pdf.Lib
+// https://github.com/angelobelchior/Html2Pdf
+// ***************************************************************************************
 
-/// <summary>
-/// Orientation
-/// </summary>
-public enum PageOrientation
+namespace Html2PdfLib
 {
     /// <summary>
-    /// Portrait
+    /// Orientation
     /// </summary>
-    Portrait,
-    
-    /// <summary>
-    /// Landscape
-    /// </summary>
-    Landscape
+    public enum PageOrientation
+    {
+        /// <summary>
+        /// Portrait
+        /// </summary>
+        Portrait,
+
+        /// <summary>
+        /// Landscape
+        /// </summary>
+        Landscape
+    }
 }

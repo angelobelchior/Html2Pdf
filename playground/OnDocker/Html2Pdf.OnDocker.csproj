@@ -21,7 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\Html2Pdf.Lib.csproj" />
+      <ProjectReference Include="..\..\src\Html2PdfLib.csproj" />
     </ItemGroup>
 
 </Project>

@@ -1,20 +1,27 @@
-namespace Html2Pdf.Lib;
+﻿// ***************************************************************************************
+// MIT LICENCE
+// The maintenance and evolution is maintained by the Html2Pdf.Lib
+// https://github.com/angelobelchior/Html2Pdf
+// ***************************************************************************************
 
-/// <summary>
-/// Text alignment for the footer and Header.
-/// </summary>
-public enum TextAlignment
+namespace Html2PdfLib
 {
     /// <summary>
-    /// Centered text alignment.
+    /// Text alignment for the footer and Header.
     /// </summary>
-    Center,
-    /// <summary>
-    /// Left aligned text alignment.
-    /// </summary>
-    Left,
-    /// <summary>
-    /// Right aligned text alignment.
-    /// </summary>
-    Right
+    public enum TextAlignment
+    {
+        /// <summary>
+        /// Left aligned text alignment.
+        /// </summary>
+        Left,
+        /// <summary>
+        /// Right aligned text alignment.
+        /// </summary>
+        Right,
+        /// <summary>
+        /// Centered text alignment.
+        /// </summary>
+        Center
+    }
 }
