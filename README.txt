@@ -32,7 +32,7 @@ What's new in V0.2.0 (Break significant change!)
 ================================================
 
 - Change main entrypoint to Html2Pdf
-- Refactoring for fluent interface for all commands
+- Refactoring to fluent interface for all commands
 - Improvements for async usage
 - Removed command template using Razor Syntax in Batch
    - Now the implementation must be done by the application
@@ -463,6 +463,6 @@ Top contributors
 ----------------
 
 - [Fernando Cerqueira](https://github.com/FRACerqueira) (V.0.2.0)
-    - Refactoring for fluent interface 
+    - Refactoring to fluent interface 
     - Improvements for async usage
     - Integration with logger and timeout option  
