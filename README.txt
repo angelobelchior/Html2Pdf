@@ -44,6 +44,8 @@ It is possible to generate a PDF in three ways
 From an HTML
 ------------
 
+var pathToSamples = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+
 var html = 
 """
 <!DOCTYPE html>
@@ -92,7 +94,7 @@ var html =
 
 var resutfileHtml = await Html2Pdf
     .FromHtml(html)
-    .SaveToAsync("html2pdfHtml.pdf", true /*return bytes*/, CancellationToken.None);
+    .SaveToAsync(Path.Combine(pathToSamples,"html2pdfHtml.pdf"), true /*return bytes*/, CancellationToken.None);
     //.RunAsync(CancellationToken.None); // return only bytes[]
 
 var elptfilehml = resutfileHtml.Elapsedtime;
@@ -111,9 +113,11 @@ else
 From Url
 --------
 
+var pathToSamples = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+
 var resutfileUrl = await Html2Pdf
     .FromUrl(new Uri("https://en.wikipedia.org/wiki/C_Sharp_(programming_language)"))
-    .SaveToAsync("html2pdfurl.pdf", true /*return bytes*/, CancellationToken.None);
+    .SaveToAsync(Path.Combine(pathToSamples,"html2pdfurl.pdf"), true /*return bytes*/, CancellationToken.None);
     //.RunAsync(CancellationToken.None); // return only bytes[]
 
 var elptfileurl = resutfileUrl.Elapsedtime;
@@ -134,6 +138,8 @@ From an HTML template using Razor Syntax
 
 public record Product(string Name, decimal Price);
 public record Order(string CustomerName, string CustomerAddress, string CustomerPhoneNumber, List<Product> Products);
+
+var pathToSamples = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
 var razorTemplate =
 """
@@ -220,6 +226,8 @@ Running a set of models in parallel
 
 public record Product(string Name, decimal Price);
 public record Order(string CustomerName, string CustomerAddress, string CustomerPhoneNumber, List<Product> Products);
+
+var pathToSamples = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
 var razorTemplate =
 """
