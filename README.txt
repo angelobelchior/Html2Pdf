@@ -309,7 +309,7 @@ for (int i = 0; i < lstrorder.Count; i++)
         })
         .FromRazorTemplate(razorTemplate, lstrorder.ElementAt(i))
         .TimeoutConvert(10000)
-        .Runsync(Path.Combine(pathToSamples, $"html2pdfRazorTemplate{i+1}.pdf"), true /*return bytes*/, CancellationToken.None));
+        .RunAsync(Path.Combine(pathToSamples, $"html2pdfRazorTemplate{i+1}.pdf"), true /*return bytes*/, CancellationToken.None));
 }
 Task.WhenAll(lsttask).Wait();
 
