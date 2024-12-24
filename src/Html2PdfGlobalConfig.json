@@ -26,5 +26,6 @@
   "DisableSmartShrinking": true,
   "EnableForms": false,
   "Timeout": 30000,
-  "IgnoreImageErrors":  false
+  "IgnoreImageErrors": false,
+  "LogArguentsInfoLevel": false
 }

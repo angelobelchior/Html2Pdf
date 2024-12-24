@@ -29,11 +29,19 @@ namespace Html2PdfLib
         ICommandsBehaviorConvert Logger(ILogger value);
 
         /// <summary>
+        /// Set to write arguments log with Level Information (Default LogLevel.Debug = false)
+        /// </summary>
+        /// <param name="value">true/false value</param>
+        /// <returns><see cref="ICommandsBehaviorConvert"/> next commands</returns>
+        ICommandsBehaviorConvert LogArguentsInfoLevel(bool value = false);
+
+
+        /// <summary>
         /// Set to Ignore image errors (Default false)
         /// </summary>
         /// <param name="value">true/false value</param>
         /// <returns><see cref="ICommandsBehaviorConvert"/> next commands</returns>
-        ICommandsBehaviorConvert IgnoreImageErrors(bool value);
+        ICommandsBehaviorConvert IgnoreImageErrors(bool value = false);
 
         /// <summary>
         /// Execute convert to PDF file

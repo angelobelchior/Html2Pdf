@@ -172,6 +172,11 @@ namespace Html2PdfLib
         /// </summary>
         public bool? IgnoreImageErrors { get; set; } = false;
 
+        /// <summary>
+        /// Set to write arguments log with Level Information (Default LogLevel.Debug = false)
+        /// </summary>
+        public bool? LogArguentsInfoLevel { get; set; } = false;
+
         #endregion
     }
 }

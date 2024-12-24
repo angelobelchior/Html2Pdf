@@ -149,6 +149,7 @@ namespace Html2PdfLib
             result.WithLowQuality(userseeting.WithLowQuality ?? defaultusersvalues.WithLowQuality!.Value);
             result.Timeout = userseeting.Timeout ?? defaultusersvalues.Timeout!.Value;
             result.IgnoreImageErrors = userseeting.IgnoreImageErrors ?? defaultusersvalues.IgnoreImageErrors!.Value;
+            result.LogArguentsInfoLevel = userseeting.LogArguentsInfoLevel ?? defaultusersvalues.LogArguentsInfoLevel!.Value;
             return result;
         }
         private static T DeepCopy<T>(T other) => JsonSerializer.Deserialize<T>(JsonSerializer.Serialize(other))!;

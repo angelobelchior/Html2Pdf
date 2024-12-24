@@ -63,6 +63,12 @@ namespace Html2PdfLib.core
             return this;
         }
 
+        public ICommandsBehaviorConvert LogArguentsInfoLevel(bool value)
+        {
+            _optionsPdf.LogArguentsInfoLevel = value;
+            return this;
+        }
+
         public async Task<Html2PdfResult> RunAsync(CancellationToken token = default)
         {
             if (string.IsNullOrEmpty(_optionsPdf.Source))
@@ -184,6 +190,5 @@ namespace Html2PdfLib.core
             }
             return result;
         }
-
     }
 }

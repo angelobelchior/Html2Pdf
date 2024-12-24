@@ -41,7 +41,14 @@ namespace Html2PdfLib.core
         {
             var arguments = $"-q {optionsPdf.ToString().Trim()} \"{filehml}\" \"{filePdf}\"";
 
-            optionsPdf.LogInstance?.LogDebug(arguments);
+            if (optionsPdf.LogArguentsInfoLevel)
+            {
+                optionsPdf.LogInstance?.LogInformation("{exe} {arg}",GetFilePath(),arguments);
+            }
+            else
+            {
+                optionsPdf.LogInstance?.LogDebug("{exe} {arg}", GetFilePath(), arguments);
+            }
 
             int exitCode = -1;
             var stdErrBuffer = new StringBuilder();
