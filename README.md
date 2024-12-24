@@ -222,8 +222,6 @@ else
 public record Product(string Name, decimal Price);
 public record Order(string CustomerName, string CustomerAddress, string CustomerPhoneNumber, List<Product> Products);
 
-var pathToSamples = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-
 var razorTemplate =
 """
 <!DOCTYPE html>
@@ -304,7 +302,7 @@ for (int i = 0; i < lstrorder.Count; i++)
         })
         .FromRazorTemplate(razorTemplate, lstrorder.ElementAt(i))
         .TimeoutConvert(10000)
-        .RunAsync(Path.Combine(pathToSamples, $"html2pdfRazorTemplate{i+1}.pdf"), true /*return bytes*/, CancellationToken.None));
+        .RunAsync(CancellationToken.None));
 }
 Task.WhenAll(lsttask).Wait();
 
