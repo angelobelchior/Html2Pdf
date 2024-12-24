@@ -222,7 +222,7 @@ var resutHtml = await Html2Pdf
     .Logger(logger)
     .TimeoutConvert(30000)
     .IgnoreImageErrors(true)
-    .LogArguentsInfoLevel(true)
+    .LogArgumentsInfoLevel(true)
     .SaveToAsync(Path.Combine(pathToSamples,"html2pdfHtml.pdf"), true /*return bytes*/, CancellationToken.None);
 
 var elpt = resutHtml.Elapsedtime;

@@ -357,7 +357,7 @@ namespace Html2PdfLib.core
 
         internal ILogger? LogInstance { get; set; }
 
-        internal bool LogArguentsInfoLevel {get; set; }
+        internal bool LogArgumentsInfoLevel {get; set; }
 
         internal ushort Timeout { get; set; } = 30000;
 

@@ -27,5 +27,5 @@
   "EnableForms": false,
   "Timeout": 30000,
   "IgnoreImageErrors": false,
-  "LogArguentsInfoLevel": false
+  "LogArgumentsInfoLevel": false
 }

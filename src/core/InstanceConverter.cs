@@ -63,9 +63,9 @@ namespace Html2PdfLib.core
             return this;
         }
 
-        public ICommandsBehaviorConvert LogArguentsInfoLevel(bool value)
+        public ICommandsBehaviorConvert LogArgumentsInfoLevel(bool value)
         {
-            _optionsPdf.LogArguentsInfoLevel = value;
+            _optionsPdf.LogArgumentsInfoLevel = value;
             return this;
         }
 

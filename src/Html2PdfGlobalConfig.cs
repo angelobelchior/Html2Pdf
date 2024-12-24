@@ -175,7 +175,7 @@ namespace Html2PdfLib
         /// <summary>
         /// Set to write arguments log with Level Information (Default LogLevel.Debug = false)
         /// </summary>
-        public bool? LogArguentsInfoLevel { get; set; } = false;
+        public bool? LogArgumentsInfoLevel { get; set; } = false;
 
         #endregion
     }

@@ -33,7 +33,7 @@ namespace Html2PdfLib
         /// </summary>
         /// <param name="value">true/false value</param>
         /// <returns><see cref="ICommandsBehaviorConvert"/> next commands</returns>
-        ICommandsBehaviorConvert LogArguentsInfoLevel(bool value = false);
+        ICommandsBehaviorConvert LogArgumentsInfoLevel(bool value = false);
 
 
         /// <summary>
