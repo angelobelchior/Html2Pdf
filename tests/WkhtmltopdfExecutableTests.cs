@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
-using Html2Pdf.Lib;
+using Html2PdfLib.core;
 
 namespace Html2Pdf.Tests;
 
@@ -12,7 +12,7 @@ public class WkhtmltopdfExecutableTests
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            var wkhtmltopdfFilePath = WkHtmlToPdfFile.GetFilePath();
+            var wkhtmltopdfFilePath = WkHtmlToPdfHelpper.GetFilePath();
             Assert.True(File.Exists(wkhtmltopdfFilePath));
         }
 
@@ -23,7 +23,7 @@ public class WkhtmltopdfExecutableTests
     [Fact]
     public void TheWkhtmltopdfFileMustBeExecutable()
     {
-        var wkhtmltopdfFilePath = WkHtmlToPdfFile.GetFilePath();
+        var wkhtmltopdfFilePath = WkHtmlToPdfHelpper.GetFilePath();
         using var process = new Process();
         process.StartInfo = new ProcessStartInfo
         {

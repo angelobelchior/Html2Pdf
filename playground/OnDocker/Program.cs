@@ -1,6 +1,13 @@
-using Html2Pdf.Lib;
+using Html2PdfLib;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddLogging(loggingBuilder =>
+{
+    loggingBuilder.ClearProviders();
+    loggingBuilder.AddConsole();
+    loggingBuilder.SetMinimumLevel(LogLevel.Debug);
+});
 builder.Services.AddOpenApi();
 var app = builder.Build();
 app.MapOpenApi();
@@ -66,20 +73,24 @@ var razorTemplate =
 </html>
 """;
 
-app.MapGet("/get-pdf", () =>
+app.MapGet("/get-pdf", async (CancellationToken token) =>
     {
         var order = new Order("Roberto Rivellino", "Rua São Jorge, 777", "+55 11 912345678", [
             new("Product 1", 9.99m),
             new("Product 2", 19.99m),
             new("Product 3", 29.99m)
         ]);
-        var resultpdf = Converter.FromRazorTemplate(
-            razorTemplate, 
-            order, 
-            new Arguments().SetPageOrientation(PageOrientation.Landscape));
-        if (resultpdf.HasValue)
+        var resultpdf = await Html2Pdf
+            .Config(opt => 
+            {
+                opt.PageOrientation(PageOrientation.Landscape);
+            })
+            .FromRazorTemplate(razorTemplate, order)
+            .Logger(app.Logger)
+            .RunAsync(token);
+        if (resultpdf.IsSuccess)
         {
-            return Results.File(resultpdf.Content!, Converter.ContentType);
+            return Results.File(resultpdf.Content!, Html2Pdf.ContentType);
         }
         return Results.InternalServerError(resultpdf.Error==null?"Erro Created PDF":resultpdf.Error.Message);
     })

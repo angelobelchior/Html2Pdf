@@ -1,7 +1,14 @@
-﻿using Html2Pdf.Lib;
+﻿// ***************************************************************************************
+// MIT LICENCE
+// The maintenance and evolution is maintained by the Html2Pdf.Lib
+// https://github.com/angelobelchior/Html2Pdf
+// ***************************************************************************************
+
+using System;
+using Html2PdfLib;
 using Microsoft.Extensions.Logging;
 
-var pathToSamples = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+Console.WriteLine("Html2PdfLib Playground");
 
 //log provider
 ILoggerFactory factory = LoggerFactory.Create(builder =>
@@ -10,93 +17,6 @@ ILoggerFactory factory = LoggerFactory.Create(builder =>
     builder.SetMinimumLevel(LogLevel.Debug);
 });
 ILogger logger = factory.CreateLogger("Program");
-
-
-Console.WriteLine("Initializing HTML to PDF conversion...");
-
-
-var arguments = new Arguments()
-    // When jpeg compressing images use this quality (default 94)
-    .SetImageQuality(80)
-
-    // Do not print background
-    .DoNotPrintBackground()
-
-    // Do not load or print images
-    .DoNotLoadOrPrintImages()
-
-    // Do not use lossless compression on pdf objects
-    .WithNoPdfCompression()
-
-    // Do not make links to remote web pages
-    .DisableExternalLinks()
-
-    // Do not make local links
-    .DisableInternalLinks()
-
-    // The title of the generated pdf file (The title of the first document is used if not specified)
-    .SetTitle("This is a sample PDF document")
-
-    // Indicates whether the PDF should be generated in lower quality.
-    .WithLowQuality()
-
-    // Number of copies to print into the PDF file.
-    .SetCopies(2)
-
-    // Indicates whether the PDF should be generated in grayscale.
-    .WithGrayScale()
-
-    // Replace [name] with value in header and footer (repeatable)
-    .Replace("HTML to PDF Test Page", "HTML to PDF Test Page - Sample 1")
-
-    // Set the starting page number (default 0)
-    .SetOffPageOffset(2)
-
-    // Sets the page margins
-    .SetPageMargins(10, 10, 10, 10)
-
-    // Sets the page Width. Has priority over "SetPageSize" but "SetPageHeight" has to be also specified.
-    .SetPageWidth(210)
-
-    // Sets the page Height. Has priority over "SetPageSize" but "SetPageWidth" has to be also specified.
-    .SetPageHeight(297)
-
-    // Set the page Orientation
-    .SetPageOrientation(PageOrientation.Landscape)
-
-    // The default page size of the rendered document is A4.
-    .SetPageSize(PageSize.A4)
-
-    // Disable SmartSets the page size.
-    .DisableSmartShrinking()
-
-    // Turn HTML form fields into pdf form fields
-    .EnableForms()
-
-    // Display line below the header
-    .DisplayHeaderLine()
-
-    // Set header text
-    .SetHeaderText("Header Text Sample 1", TextAlignment.Center, "Verdana", 15)
-
-    // Spacing between footer and content in mm (default 0)
-    .SetHeaderSpacing(23)
-
-    // Display line above the footer
-    .DisplayFooterLine()
-
-    // Set footer text
-    .SetFooterText("Footer Text Sample 1", TextAlignment.Center, "Verdana", 15)
-
-    // Spacing between footer and content in mm (default 0)
-    .SetFooterSpacing(23)
-
-    //add current ILogger
-    .AddLogger(logger)
-
-    //set timeout convert to PDF
-    .TimeoutConvert(10000);
-
 
 var html =
     """
@@ -179,6 +99,9 @@ var html =
                 border: 1px solid #ccc;
                 border-radius: 5px;
             }
+            tr { 
+                page-break-inside: avoid; 
+            }
         </style>
     </head>
     <body>
@@ -210,18 +133,8 @@ var html =
             <article>
             <h2>Article 4</h2>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque facilisis.</p>
-                <img src="https://via.placeholder.com/300" alt="Placeholder Image" class="base64-image">
+                <img src="https://via.placeholder.com/100" alt="Placeholder Image" class="base64-image">
             </article>
-                <article>
-                    <h2>Article 5</h2>
-                    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                    <img src="https://via.placeholder.com/150" alt="Placeholder Image" class="base64-image">
-                </article>
-                <article>
-                    <h2>Article 6</h2>
-                    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
-                    <img src="https://via.placeholder.com/100" alt="Placeholder Image" class="base64-image">
-                </article>
         </section>
         <section>
             <h2>Colors</h2>
@@ -285,48 +198,103 @@ var html =
     </body>
     </html>
     """;
-var resultHtml = Converter.FromHtml(html, arguments);
-if (resultHtml.HasValue)
+
+var pathToSamples = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+
+//convert to file PDF and return bytes from pdf 
+var resutHtml = await Html2Pdf
+    .Config((opt) =>
+        {
+            opt.Copies(2)
+             .ImageQuality(80)
+             .PageOrientation(PageOrientation.Landscape)
+             .Title("This is a sample PDF document")
+             .Replace("HTML to PDF Test Page", "HTML to PDF Test Page - Sample 1")
+             .HeaderText("Header Text Sample 1", TextAlignment.Center)
+             .HeaderFont("Verdana", 10)
+             .FooterText("Footer Text Sample 1", TextAlignment.Center)
+             .FooterFont("Verdana", 10)
+             .HasFooterLine(true)
+             .HasHeaderLine(true)   
+             .PageMargins(5);
+        })
+    .FromHtml(html)
+    .Logger(logger)
+    .TimeoutConvert(30000)
+    .IgnoreImageErrors(true)
+    .LogArgumentsInfoLevel(true)
+    .SaveToAsync(Path.Combine(pathToSamples,"html2pdfHtml.pdf"), true /*return bytes*/, CancellationToken.None);
+
+var elpt = resutHtml.Elapsedtime;
+
+if (resutHtml.IsSuccess)
 {
-    File.WriteAllBytes(Path.Combine(pathToSamples, "html2pdfHtml.pdf"), resultHtml.Content!);
+    var bytes = resutHtml.Content;
+    var file = resutHtml.FileName;
 }
 else
 {
-    Console.WriteLine($"Erro: {resultHtml.Error?.ToString()}");
-}
-resultHtml = Converter.FromHtml(Path.Combine(pathToSamples, "html2directpdfHtml.pdf"), html, arguments);
-if (!resultHtml.HasValue)
-{
-    Console.WriteLine($"Erro: {resultHtml.Error?.ToString()}");
+    var err = resutHtml.Error;
 }
 
+//convert to bytes PDF
+resutHtml = await Html2Pdf
+    .Config((opt) =>
+    {
+        opt.Title("This is a sample PDF document")
+         .Replace("HTML to PDF Test Page", "HTML to PDF Test Page - Sample 1")
+         .HeaderText("Header Text Sample 1", TextAlignment.Center)
+         .HeaderFont("Verdana", 15)
+         .FooterText("Footer Text Sample 1", TextAlignment.Center)
+         .FooterFont("Verdana", 15)
+         .FooterSpacing(23)
+         .PageMargins(10);
+    })
+    .FromHtml(html)
+    .Logger(logger)
+    .TimeoutConvert(30000)
+    .RunAsync(CancellationToken.None);
 
-// ----------------------------------------------------------
+elpt = resutHtml.Elapsedtime;
 
-var resultUrl = Converter.FromUrl(new("https://en.wikipedia.org/wiki/C_Sharp_(programming_language)"), arguments);
-if (resultUrl.HasValue)
+if (resutHtml.IsSuccess)
 {
-    File.WriteAllBytes(Path.Combine(pathToSamples, "html2pdfUrl.pdf"), resultUrl.Content!);
+    var bytes = resutHtml.Content;
+    var file = resutHtml.FileName; //null value
 }
 else
 {
-    Console.WriteLine($"Erro: {resultUrl.Error?.ToString()}");
+    var err = resutHtml.Error;
 }
-resultUrl = Converter.FromUrl(Path.Combine(pathToSamples, "html2DirectpdfUrl.pdf"), new("https://en.wikipedia.org/wiki/C_Sharp_(programming_language)"), arguments);
-if (!resultUrl.HasValue)
+
+//convert Site page to file PDF and return bytes from pdf 
+var resutUrl = await Html2Pdf
+    .Config((opt) =>
+    {
+        opt.PageMargins(5);
+    })
+    .FromUrl(new Uri("https://en.wikipedia.org/wiki/C_Sharp_(programming_language)"))
+    .Logger(logger)
+    .TimeoutConvert(10000)
+    .SaveToAsync($"{pathToSamples}/html2pdfUrl.pdf", true /*return bytes*/, CancellationToken.None);
+
+elpt = resutUrl.Elapsedtime;
+
+if (resutUrl.IsSuccess)
 {
-    Console.WriteLine($"Erro: {resultUrl.Error?.ToString()}");
+    var bytes = resutUrl.Content;
+    var file = resutUrl.FileName;
 }
-
-
-// ----------------------------------------------------------
+else
+{
+    var err = resutUrl.Error;
+}
 
 var razorTemplate =
 """
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
     <title>Customer Details</title>
     <style>
         table {
@@ -381,59 +349,111 @@ var razorTemplate =
 </html>
 """;
 
-var lstprod = new List<Product>();
-for (int i = 0; i < 20; i++)
-{
-    lstprod.Add(new Product($"Product{i}", 9.99m));
-}
+var order1 = new Order("Roberto Rivellino", "Rua S&atilde;o Jorge, 777", "+55 11 912345678", [
+    new("Product 1", 9.99m),
+    new("Product 2", 19.99m),
+    new("Product 3", 29.99m),
+    new("Product 4", 39.99m),
+    new("Product 4", 39.99m),
+    new("Product 4", 39.99m),
+    new("Product 4", 39.99m),
+    new("Product 4", 39.99m),
+    new("Product 4", 39.99m),
+    new("Product 4", 39.99m),
+    new("Product 4", 39.99m),
+    new("Product 4", 39.99m),
+    new("Product 4", 39.99m),
+    new("Product 4", 39.99m),
+    new("Product 4", 39.99m),
+    new("Product 4", 39.99m),
+    new("Product 4", 39.99m),
+    new("Product 4", 39.99m),
+    new("Product 4", 39.99m),
+    new("Product 4", 39.99m),
+    new("Product 4", 39.99m),
+    new("Product 4", 39.99m),
+    new("Product 4", 39.99m),
+    new("Product 4", 39.99m),
+    new("Product 4", 39.99m),
+    new("Product 4", 39.99m),
+    new("Product 4", 39.99m),
+    new("Product 4", 39.99m),
+    new("Product 4", 39.99m),
+    new("Product 4", 39.99m),
+    new("Product 4", 39.99m),
+    new("Product 4", 39.99m),
+    new("Product 4", 39.99m),
+    new("Product 4", 39.99m),
+    new("Product 4", 39.99m),
+]);
 
-var order1 = new Order("Roberto Rivellino", "Rua S&atilde;o Jorge, 777", "+55 11 912345678", lstprod);
+//convert Razor page to file PDF and return bytes from pdf 
+var resutRazor = await Html2Pdf
+    .Config((opt) =>
+    {
+        opt.PageMargins(5);
+    })
+    .FromRazorTemplate(razorTemplate,order1)
+    .Logger(logger)
+    .TimeoutConvert(10000)
+    .SaveToAsync(Path.Combine(pathToSamples,"html2pdfRazorTemplate.pdf"), true /*return bytes*/);
 
-var resultRazorTemplate = Converter.FromRazorTemplate(razorTemplate, order1, arguments);
-if (resultRazorTemplate.HasValue)
+elpt = resutRazor.Elapsedtime;
+
+if (resutRazor.IsSuccess)
 {
-    File.WriteAllBytes(Path.Combine(pathToSamples, "html2pdfRazorTemplate.pdf"), resultRazorTemplate.Content!);
+    var bytes = resutRazor.Content;
+    var file = resutRazor.FileName;
 }
 else
 {
-    Console.WriteLine($"Erro: {resultHtml.Error?.ToString()}");
+    var err = resutRazor.Error;
 }
-resultRazorTemplate = Converter.FromRazorTemplate(
-    Path.Combine(pathToSamples, "html2DirectpdfRazorTemplate.pdf"), razorTemplate, order1, arguments);
-if (!resultRazorTemplate.HasValue)
+
+var lstrorder = new List<Order>
 {
-    Console.WriteLine($"Erro: {resultRazorTemplate.Error?.ToString()}");
-}
-
-
-var order2 = new Order("Sócrates", "Rua das Alamedas, 888", "+55 11 912345678", [
+    new("Sócrates", "Rua das Alamedas, 888", "+55 11 912345678", [
     new("Product 1", 2.99m),
     new("Product 2", 4.99m),
     new("Product 3", 6.99m)
-]);
-
-var order3 = new Order("Biro Biro", "Avenida das Orquídeas, 999", "+55 11 912345678", [
+]),
+    new("Biro Biro", "Avenida das Orquídeas, 999", "+55 11 912345678", [
     new("Product 1", 3.99m),
     new("Product 2", 5.99m),
-]);
+]),
+    new("Casagrande", "Estrada das Flores, 456", "+55 11 912345678", [])
+};
 
-var order4 = new Order("Casagrande", "Estrada das Flores, 456", "+55 11 912345678", []);
-
-var resultRazorTemplateList = Converter.FromRazorTemplateBatch(razorTemplate, [order1, order2, order3, order4], arguments);
-for (int i = 0; i < resultRazorTemplateList.Count; i++)
+//Convert Razor page using an order list in parallel tasks to archive PDF and return PDF bytes
+var lsttask = new List<Task<Html2PdfResult>>();
+for (int i = 0; i < lstrorder.Count; i++)
 {
-    var itemresult = resultRazorTemplateList.ElementAt(i);
-    if (itemresult.HasValue)
+   lsttask.Add(Html2Pdf
+        .Config((opt) =>
+        {
+            opt.PageMargins(5);
+        })
+        .FromRazorTemplate(razorTemplate, lstrorder.ElementAt(i))
+        .Logger(logger)
+        .TimeoutConvert(10000)
+        .SaveToAsync(Path.Combine(pathToSamples, $"html2pdfRazorTemplate{i+1}.pdf"), true /*return bytes*/, CancellationToken.None));
+}
+Task.WhenAll(lsttask).Wait();
+
+foreach (var task in lsttask)
+{
+
+    elpt = task.Result.Elapsedtime;
+    if (task.Result.IsSuccess)
     {
-        File.WriteAllBytes(Path.Combine(pathToSamples, $"html2pdfRazorTemplate{i}.pdf"), itemresult.Content!);
+        var bytes = task.Result.Content;
+        var file = task.Result.FileName;
     }
     else
     {
-        Console.WriteLine($"Erro: {itemresult.Error?.ToString()}");
+        var err = task.Result.Error;
     }
 }
-
-Console.WriteLine("End...");
 
 public record Product(string Name, decimal Price);
 public record Order(string CustomerName, string CustomerAddress, string CustomerPhoneNumber, List<Product> Products);
